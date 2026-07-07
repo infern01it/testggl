@@ -8,8 +8,17 @@ const PORT = process.env.PORT || 3000;
 
 const store = new DataStore();
 
-// Middleware
-app.use(cors());
+// Настройка CORS - разрешаем только ваш домен
+const corsOptions = {
+  origin: 'https://alenakosinova.ru', // Только этот домен
+  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // если нужны куки
+  optionsSuccessStatus: 200
+};
+
+// Применяем CORS ко всем маршрутам
+app.use(cors(corsOptions));
 
 // Поддерживаем разные форматы запросов:
 app.use(bodyParser.json()); // для application/json
