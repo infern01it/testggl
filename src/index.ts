@@ -110,6 +110,27 @@ app.get('/records', (req: Request, res: Response) => {
   }
 });
 
+// Специальный эндпоинт для Tilda
+app.post('/tilda-webhook', async (req: Request, res: Response) => {
+  try {
+    // Получаем данные от Tilda
+    const data = req.body;
+    console.log('📥 Получены данные от Tilda:', data);
+
+    // Сохраняем данные в файл
+    const newRecord = store.addRecord(data);
+
+    // 💥 КЛЮЧЕВОЙ МОМЕНТ: Отправляем просто "ok"
+    res.status(200).send('ok');
+    // Не используем res.json(), так как Tilda ждет plain text "ok"
+
+  } catch (error) {
+    console.error('❌ Ошибка:', error);
+    // Даже в случае ошибки лучше вернуть "ok", чтобы Tilda не переотправляла запрос
+    res.status(200).send('ok');
+  }
+});
+
 // Запускаем сервер
 app.listen(PORT, () => {
   console.log(`
